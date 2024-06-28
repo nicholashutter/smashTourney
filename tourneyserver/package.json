@@ -2,13 +2,9 @@
   "name": "tourneyserver",
   "version": "0.0.0",
   "scripts": {
-    "build": "npx ts-node build.ts",
-    "lint": "npx eslint --ext .ts src/",
-    "lint:tests": "npx eslint --ext .ts spec/",
-    "start": "node -r module-alias/register ./dist --env=production",
-    "dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json",
-    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec"
+    "build": "tsc",
+    "start": "ts-node -r tsconfig-paths/register src/server.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts"
   },
   "nodemonConfig": {
     "watch": [

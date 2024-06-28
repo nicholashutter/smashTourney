@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /**
  * Setup express server.
  */
@@ -6,7 +10,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
 import helmet from 'helmet';
-import express, { Request, Response, NextFunction, response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import logger from 'jet-logger';
 
 import 'express-async-errors';
@@ -19,7 +23,6 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import RouteError from '@src/common/RouteError';
 import { NodeEnvs } from '@src/common/misc';
 import dbConnector from './dbConnector';
-
 
 // **** Variables **** //
 
@@ -91,37 +94,43 @@ app.get('/CreateTourney', (_: Request, res: Response) => {
 }); 
 
 app.get('/smash.png', (_:Request,res:Response)=>{
-  return res.sendFile('smash.png',{root:viewsDir})
+  return res.sendFile('smash.png',{root:viewsDir});
 });
 
 app.get('/', (_:Request,res:Response)=>{
-  return res.sendFile('/HomePage.html', {root:viewsDir})
+  return res.sendFile('/HomePage.html', {root:viewsDir});
 });
 
 app.get('/JoinTourney', (_:Request,res:Response)=>{
-  return res.sendFile('/JoinTourney.html', {root:viewsDir})
+  return res.sendFile('/JoinTourney.html', {root:viewsDir});
 });
 
 app.get('/signup', (_:Request,res:Response)=>{
-  return res.sendFile('/signup.html', {root:viewsDir})
+  return res.sendFile('/signup.html', {root:viewsDir});
 });
 
 app.get('/TourneyMenu', (_:Request,res:Response)=>{
-  return res.sendFile('/TourneyMenu.html', {root:viewsDir})
+  return res.sendFile('/TourneyMenu.html', {root:viewsDir});
 });
 
 app.get ('/dbTest', async (req: Request, res: Response) => {
-        try{
-            const tourneydb:dbConnector = new dbConnector('postgres','superuser','localhost',5432,'tourneydb');
-            const result = await tourneydb.query('Select * from fighters','');
-            res.json(result.rows);
-        } catch (err){
-            console.error(err);
-            res.status(500).send('Internal Server Error');
-        }
-        
-    }); 
+  try{
+    const tourneydb:dbConnector = 
+      new dbConnector('postgres','superuser','localhost',5432,'tourneydb');
+    const result = await tourneydb.query('Select * from fighters','');
+    res.json(result.rows);
+  } catch (err){
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+  
+}); 
 
+
+const SERVER_START_MSG = ('Express server started on port: ' + 
+  EnvVars.Port.toString());
+
+app.listen(EnvVars.Port, () => logger.info(SERVER_START_MSG));
 
 
 // **** Export default **** //

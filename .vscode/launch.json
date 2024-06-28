@@ -1,18 +1,38 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [{
+    "configurations": [
+      {
         "type": "node",
         "request": "launch",
-        "name": "Launch Program",
-        "runtimeArgs": [
-            "-r",
-            "ts-node/register"
-        ],
-        "args": [
-            "${workspaceFolder}/src/index.ts"
-        ]
-    }],
-}
+        "name": "Launch Server",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "${workspaceFolder}/tourneyserver/src/server.ts",
+        "preLaunchTask": "build-server",
+        "env": {
+          "NODE_ENV": "development"
+        },
+        "sourceMaps": true,
+        "outFiles": ["${workspaceFolder}/tourneyserver/dist/**/*.js"],
+        "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+        "cwd": "${workspaceFolder}/tourneyserver"
+      },
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Launch React App",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder}/tourneyclient/src",
+        "sourceMaps": true,
+        "sourceMapPathOverrides": {
+          "webpack:///src/*": "${webRoot}/*"
+        },
+        "preLaunchTask": "start-client"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Launch Client and Server",
+        "configurations": ["Launch Server", "Launch React App"]
+      }
+    ]
+  }
